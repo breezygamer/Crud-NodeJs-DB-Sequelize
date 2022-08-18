@@ -45,6 +45,18 @@ app.post("/cad", (req,res)=>{
 
     nome = nome.replace(/[^A-zà-ú\s]/gi,"")
 
+    //VERIFICAR SE O CAMPO ESTA VAZIO 
+
+    if (nome =="" || typeof nome == undefined || nome == null){
+        erros.push({mensagem: "campo nome não pode estar vazio!"})
+    }
+    
+    //VERIFICAR SE O CAMPO NOME É VALIDO
+
+   if(!/^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ-']+$/.test(nome)) {
+    erros.push({mensagem: "Nome invalido"})
+   }
+
 });
 
 app.listen(PORT, ()=>{
