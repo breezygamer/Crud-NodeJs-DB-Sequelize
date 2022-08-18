@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
 const hbs = require("express-handlebars");
-const bodyParser = require("body-parser")
+const bodyParser = require("body-parser");
+const session = require("express-session")
 const PORT = process.env.PORT || 3000;
 
 //CONFIGURAÇÃO DO HANDLEBARS
@@ -11,7 +12,16 @@ app.engine("hbs", hbs.engine({
     defaultLayout: "main"
 })); app.set("view engine", "hbs");
 
-app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.urlencoded({extended:false}));
+
+//CONFIGUTAÇÃO DAS SESSIONS 
+app.use(session({
+    secret:"minhaChave",
+    resave: false,
+    saveUninitialized: true
+}))
+
+//ROTAS
 
 app.get("/", (req,res)=>{
 res.render("index", {navActiveCad: true});
@@ -44,6 +54,7 @@ app.post("/cad", (req,res)=>{
     //LIMPAR O NOME DE CARACTERES ESPECIAIS (APENAS LETRAS)
 
     nome = nome.replace(/[^A-zà-ú\s]/gi,"")
+    nome = nome.trim();
 
     //VERIFICAR SE O CAMPO ESTA VAZIO 
 
@@ -51,14 +62,36 @@ app.post("/cad", (req,res)=>{
         erros.push({mensagem: "campo nome não pode estar vazio!"})
     }
     
-    //VERIFICAR SE O CAMPO NOME É VALIDO
+    //VERIFICAR SE O CAMPO NOME É VALIDO(APENAS LETRAS)
 
-   if(!/^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ-']+$/.test(nome)) {
+   if(!/^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/.test(nome)) {
     erros.push({mensagem: "Nome invalido"})
    }
+
+   //VERIFICAR SE O CAMPO ESTA VAZIO 
+    
+   if(!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
+    erros.push({mensagem: "campo email invalido!"});
+   };
+
+   if(erros.length > 0){
+    console.log(erros)
+
+    req.session.erros = erros;
+    req.session.success = false;
+    return res.redirect("/")
+   }
+        
+   //SUCESSO NENHUM ERRO
+   //SALVAR NO BANCO DE DADOS
+   console.log("validação realizada com sucesso!")
+   req.session.success = true;
+   req.session.success = false;
+   return res.redirect("/")
+    
 
 });
 
 app.listen(PORT, ()=>{
-    console.log(`Servidor rodando na porta${PORT}`)
+    console.log(`Servidor rodando na porta ${PORT}`)
 })
