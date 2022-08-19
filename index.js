@@ -24,15 +24,25 @@ app.use(session({
 //ROTAS
 
 app.get("/", (req,res)=>{
-res.render("index", {navActiveCad: true});
+    if(req.session.errors){
+        var arrayErros = req.session.errors;
+        req.session.errors = "";
+        return res.render("index", {navActiveCad: true, errors:arrayErros})
+    };
+
+    if(req.session.success){
+        req.session.success = false;
+        return res.render("index", {navActiveCad: true, MsgSuccess: true})
+    };
+    res.render("index", {navActiveCad: true});
 });
 
 app.get("/users", (req,res)=>{
-res.render("users", {navActiveUsers: true});
+    res.render("users", {navActiveUsers: true});
 });
 
 app.get("/editar", (req,res)=>{
-res.render("editar");
+    res.render("editar");
 });
 
 app.post("/cad", (req,res)=>{
@@ -46,6 +56,7 @@ app.post("/cad", (req,res)=>{
 
     const erros = [];
 
+    
     //REMOVER OS ESPAÇOS EM BRANCO ANTES E DEPOIS
 
     nome = nome.trim();
@@ -77,18 +88,20 @@ app.post("/cad", (req,res)=>{
    if(erros.length > 0){
     console.log(erros)
 
-    req.session.erros = erros;
+    req.session.errors = erros;
     req.session.success = false;
     return res.redirect("/")
    }
+
         
    //SUCESSO NENHUM ERRO
    //SALVAR NO BANCO DE DADOS
    console.log("validação realizada com sucesso!")
    req.session.success = true;
-   req.session.success = false;
-   return res.redirect("/")
-    
+   return res.redirect("/");
+
+   teste
+
 
 });
 
