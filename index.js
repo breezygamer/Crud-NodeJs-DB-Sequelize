@@ -100,9 +100,6 @@ app.post("/cad", (req,res)=>{
    req.session.success = true;
    return res.redirect("/");
 
-   teste
-
-
 });
 
 app.listen(PORT, ()=>{
