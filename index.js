@@ -16,6 +16,10 @@ app.engine("hbs", hbs.engine({
 
 app.use(bodyParser.urlencoded({extended:false}));
 
+// IMPORTAR USUARIOS
+
+const User = require("./models/User")
+
 //CONFIGUTAÇÃO DAS SESSIONS 
 app.use(session({
     secret:"minhaChave",
@@ -107,5 +111,3 @@ app.post("/cad", (req,res)=>{
 app.listen(PORT, ()=>{
     console.log(`Servidor rodando na porta ${PORT}`)
 })
-
-djhfdg
