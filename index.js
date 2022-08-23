@@ -102,9 +102,19 @@ app.post("/cad", (req,res)=>{
         
    //SUCESSO NENHUM ERRO
    //SALVAR NO BANCO DE DADOS
-   console.log("validação realizada com sucesso!")
-   req.session.success = true;
-   return res.redirect("/");
+
+    User.create({
+        nome: nome,
+        email: email.toLowerCase()
+    }).then(()=>{
+        console.log("Cadastrado com sucesso")
+        req.session.success = true;
+        return res.redirect("/");
+    }).catch((erro)=>{
+        console.log(`OPS, ouve um erro: ${erro}`)
+    })
+
+ 
 
 });
 
