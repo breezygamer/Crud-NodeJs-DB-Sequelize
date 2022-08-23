@@ -44,7 +44,18 @@ app.get("/", (req,res)=>{
 });
 
 app.get("/users", (req,res)=>{
-    res.render("users", {navActiveUsers: true});
+    User.findAll().then((valores)=>{
+
+        if(valores.length > 0){
+            res.render("users", {navActiveUsers: true, table: true, usuarios:valores.map(valores => valores.toJSON()) });
+        } else{
+            res.render("users", {navActiveUsers: true, table: false})
+        }
+
+    }).catch((err)=>{
+        console.log("Ocoreu um erro na pesquisa")
+    })
+    
 });
 
 app.get("/editar", (req,res)=>{
