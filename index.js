@@ -196,7 +196,19 @@ app.post('/update',(req,res)=>{
              console.log(err);
          })
  })
- 
+
+app.post("/delete", (req, res)=>{
+    User.destroy({
+        where: {
+            id: req.body.id
+        }
+    }).then((retorno)=>{
+        return res.redirect("/users");
+    }).catch((err)=>{
+        console.log(err);
+    })
+})
+
 app.listen(PORT, ()=>{
     console.log(`Servidor rodando na porta ${PORT}`)
 })
