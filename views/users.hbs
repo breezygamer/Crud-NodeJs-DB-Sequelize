@@ -22,8 +22,14 @@
       <td>{{nome}}</td>
       <td>{{email}}</td>
       <td>
+
+        <form action="/editar" method="post">
+          <input type="hidden" name="id" value="{{id}}">
+          <button class="w-100 btn btn-info">Editar</button>
+        </form>
+
         <div class="row g-1">
-          <div class="col-6 col-md-4"> <a href="./editar" class="w-100 btn btn-info">Editar</a></div>
+          
           <div class="col-6 col-md-4"> <a href="" class="w-100 btn btn-danger">Deletar</a></div>
         </div>
       </td>
